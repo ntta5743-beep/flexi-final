@@ -64,6 +64,6 @@ export default function DebugWatchPage() {
           </video>
         </div>
       )}
-    </div>ش
+    </div>
   )
 }
