@@ -7,6 +7,14 @@ interface WatchPageProps {
   };
 }
 
+export async function generateStaticParams() {
+  return [
+    { id: '1' },
+    { id: '2' },
+    { id: '3' }
+  ];
+}
+
 export default async function WatchPage({ params }: WatchPageProps) {
   const { id } = params;
 
