@@ -3,19 +3,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-// مصفوفة سنوات من 2026 تنازلياً حتى 1990
 const yearsList = Array.from({ length: 2026 - 1990 + 1 }, (_, i) => (2026 - i).toString());
 
-// جميع أنواع الأفلام والبلدان الشاملة
 const categoriesList = ['الكل', 'أكشن', 'رعب', 'كوميدي', 'خيال علمي', 'دراما', 'جريمة', 'مغامرة', 'أنمي', 'غموض', 'إثارة', 'رومنسي', 'وثائقي'];
 const countriesList = ['الكل', 'أمريكا', 'بريطانيا', 'كوريا الجنوبية', 'اليابان', 'مصر', 'الهند', 'فرنسا', 'إيطاليا'];
 
-// قائمة أفلام تجريبية تمثل الأفلام الرائجة والأكثر مشاهدة
 const initialMovies = [
-  { id: 1, title: 'Inception (مترجم)', category: 'أكشن', rating: 8.8, year: '2010', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&auto=format&fit=crop&q=60', isTrending: true, description: 'لص يسرق أسرار الشركات من خلال اختراق الأحلام يُعرض عليه مهمة مستحيلة لزرع فكرة في رأس الرئيس التنفيذي.' },
-  { id: 2, title: 'Interstellar (مترجم)', category: 'خيال علمي', rating: 8.6, year: '2014', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'فريق من استكشاف الفضاء يسافر عبر ثقب دودي محاولاً إنقاذ البشرية وبحث عن كوكب صالح للعيش.' },
-  { id: 3, title: 'The Conjuring (مترجم)', category: 'رعب', rating: 7.5, year: '2013', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'محققان في الظواهر الخارقة يمحصان في قساوة أرواح شريرة ترهب عائلة مسالمة في منزلها الريفي.' },
-  { id: 4, title: 'Parasite (مترجم)', category: 'دراما', rating: 8.5, year: '2019', country: 'كوريا الجنوبية', image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'عائلة فقيرة تتسلل بطرق ذكية للعمل لدى عائلة غنية، وتتوالى الأحداث في قالب مثير وغير متوقع.' }
+  { id: 1, title: 'Inception مترجم', category: 'أكشن', rating: 8.8, year: '2010', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&auto=format&fit=crop&q=60', isTrending: true, description: 'لص يسرق أسرار الشركات من خلال اختراق الأحلام يُعرض عليه مهمة مستحيلة لزرع فكرة في رأس الرئيس التنفيذي.' },
+  { id: 2, title: 'Interstellar مترجم', category: 'خيال علمي', rating: 8.6, year: '2014', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'فريق من استكشاف الفضاء يسافر عبر ثقب دودي محاولاً إنقاذ البشرية وبحث عن كوكب صالح للعيش.' },
+  { id: 3, title: 'The Conjuring مترجم', category: 'رعب', rating: 7.5, year: '2013', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'محققان في الظواهر الخارقة يمحصان في قساوة أرواح شريرة ترهب عائلة مسالمة في منزلها الريفي.' },
+  { id: 4, title: 'Parasite مترجم', category: 'دراما', rating: 8.5, year: '2019', country: 'كوريا الجنوبية', image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'عائلة فقيرة تتسلل بطرق ذكية للعمل لدى عائلة غنية، وتتوالى الأحداث في قالب مثير وغير متوقع.' }
 ];
 
 export default function Home() {
@@ -25,10 +22,8 @@ export default function Home() {
   const [selectedCountry, setSelectedCountry] = useState('الكل');
   const [selectedRating, setSelectedRating] = useState('الكل');
 
-  // الفيلم الرائج المخصص للبانر الرئيسي (أو أول فيلم رائج في القائمة)
   const trendingMovie = initialMovies.find(m => m.isTrending) || initialMovies[0];
 
-  // منطق الفلترة والبحث المتقدم الشامل
   const filteredMovies = initialMovies.filter(movie => {
     const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'الكل' || movie.category === selectedCategory;
@@ -46,10 +41,8 @@ export default function Home() {
   return (
     <div dir="rtl" style={{ backgroundColor: '#141414', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', margin: 0, padding: 0 }}>
       
-      {/* 1. شريط التنقل العلوي مع خانة البحث وججميع الفلاتر بجواره مباشرة */}
+      {/* شريط التنقل العلوي والفلاتر */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', background: 'linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.6))', position: 'fixed', top: 0, width: '100%', boxSizing: 'border-box', zIndex: 1000, flexWrap: 'wrap', gap: '15px' }}>
-        
-        {/* الشعار وروابط التصفح الأساسية */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
           <h1 style={{ color: '#E50914', fontSize: '28px', fontWeight: '900', margin: 0, cursor: 'pointer', letterSpacing: '1px' }}>FLEXI</h1>
           <div style={{ display: 'flex', gap: '15px', fontSize: '13px', color: '#e5e5e5' }}>
@@ -59,7 +52,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* شريط البحث وجميع الفلاتر مجتمعة باحترافية بجوار بعضها */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <input
             type="text"
@@ -69,7 +61,6 @@ export default function Home() {
             style={{ backgroundColor: 'rgba(0,0,0,0.7)', border: '1px solid #555', padding: '7px 12px', borderRadius: '4px', color: '#fff', fontSize: '13px', width: '160px', outline: 'none' }}
           />
 
-          {/* فلتر النوع */}
           <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} style={selectStyle}>
             <option value="الكل">كل الأنواع</option>
             {categoriesList.filter(c => c !== 'الكل').map(cat => (
@@ -77,7 +68,6 @@ export default function Home() {
             ))}
           </select>
 
-          {/* فلتر السنة (من 1990 إلى 2026) */}
           <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} style={selectStyle}>
             <option value="الكل">كل السنوات</option>
             {yearsList.map(year => (
@@ -85,7 +75,6 @@ export default function Home() {
             ))}
           </select>
 
-          {/* فلتر البلد */}
           <select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)} style={selectStyle}>
             <option value="الكل">كل البلدان</option>
             {countriesList.filter(c => c !== 'الكل').map(country => (
@@ -93,7 +82,6 @@ export default function Home() {
             ))}
           </select>
 
-          {/* فلتر التقييم */}
           <select value={selectedRating} onChange={(e) => setSelectedRating(e.target.value)} style={selectStyle}>
             <option value="الكل">كل التقييمات</option>
             <option value="9+">★ 9+ ممتاز</option>
@@ -103,7 +91,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* 2. الواجهة البانرية الديناميكية (تعرض الفيلم الرائج والأكثر مشاهدة تلقائياً) */}
+      {/* الواجهة البانرية الديناميكية */}
       <div style={{ position: 'relative', height: '65vh', backgroundImage: `url('${trendingMovie.image}')`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'center', padding: '0 40px', paddingTop: '60px' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #141414 10%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.8) 100%)' }}></div>
         <div style={{ position: 'relative', zIndex: 10, maxWidth: '650px' }}>
@@ -122,7 +110,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 3. شبكة الأفلام مع أنيميشن الحركة والتوهج عند تمرير الماوس */}
+      {/* شبكة الأفلام مع أنيميشن التمرير الأنيق */}
       <div style={{ padding: '40px' }}>
         <h3 style={{ fontSize: '20px', fontWeight: 'bold', borderRight: '4px solid #E50914', paddingRight: '12px', marginBottom: '25px' }}>
           نتائج الأفلام المعروضة ({filteredMovies.length})
@@ -137,7 +125,7 @@ export default function Home() {
               className="movie-card"
             >
               <div style={{ height: '280px', backgroundColor: '#222', overflow: 'hidden' }}>
-                <img src={movie.image} alt={movie.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }} />
+                <img src={movie.image} alt={movie.title} className="movie-img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div style={{ padding: '12px' }}>
                 <h4 style={{ fontSize: '14px', margin: '0 0 8px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{movie.title}</h4>
@@ -151,15 +139,21 @@ export default function Home() {
         </div>
       </div>
 
-      {/* أنيميشن CSS لتفاعل الماوس السلس والتوهج السينمائي */}
+      {/* أنيميشن نابع من الفخامة لتفاعل الماوس */}
       <style jsx>{`
+        .movie-card {
+          transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease !important;
+        }
         .movie-card:hover {
-          transform: scale(1.06);
-          box-shadow: 0 12px 25px rgba(229, 9, 20, 0.4);
+          transform: translateY(-8px) scale(1.03);
+          box-shadow: 0 15px 30px rgba(229, 9, 20, 0.35);
           z-index: 10;
         }
-        .movie-card:hover img {
-          transform: scale(1.1);
+        .movie-img {
+          transition: transform 0.4s ease !important;
+        }
+        .movie-card:hover .movie-img {
+          transform: scale(1.08);
         }
       `}</style>
     </div>
@@ -184,6 +178,5 @@ const movieCardStyle = {
   borderRadius: '6px',
   overflow: 'hidden',
   boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
-  transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
   display: 'block'
 };
