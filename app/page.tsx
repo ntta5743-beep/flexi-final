@@ -1,33 +1,46 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 const yearsList = Array.from({ length: 2026 - 1990 + 1 }, (_, i) => (2026 - i).toString());
 const categoriesList = ['الكل', 'أكشن', 'رعب', 'كوميدي', 'خيال علمي', 'دراما', 'جريمة', 'مغامرة', 'أنمي', 'غموض', 'إثارة', 'رومنسي', 'وثائقي'];
 const countriesList = ['الكل', 'أمريكا', 'بريطانيا', 'كوريا الجنوبية', 'اليابان', 'مصر', 'الهند', 'فرنسا', 'إيطاليا'];
 
-// قاعدة بيانات أشهر 100 فيلم عالمي
-const initialMovies = [
-  { id: 1, title: 'Inception مترجم', category: 'أكشن', rating: 8.8, year: '2010', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&auto=format&fit=crop&q=60', isTrending: true, description: 'لص يسرق أسرار الشركات من خلال اختراق الأحلام يُعرض عليه مهمة مستحيلة لزرع فكرة في رأس الرئيس التنفيذي.' },
-  { id: 2, title: 'Interstellar مترجم', category: 'خيال علمي', rating: 8.6, year: '2014', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'فريق من استكشاف الفضاء يسافر عبر ثقب دودي محاولاً إنقاذ البشرية وبحث عن كوكب صالح للعيش.' },
-  { id: 3, title: 'The Dark Knight مترجم', category: 'أكشن', rating: 9.0, year: '2008', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'يتحالف باتمان مع المأمور جيمس جوردون والمدعي العام هارفي دفي للقضاء على الجريمة المنظمة في جوثام، ليظهر الجوكر.' },
-  { id: 4, title: 'Avengers: Endgame مترجم', category: 'أكشن', rating: 8.4, year: '2019', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'بعد أحداث إنفينيتي وور المدمرة، يتجمع ما تبقى من الأبطال الخارقين لعكس أفعال ثانوس وإنقاذ الكون.' },
-  { id: 5, title: 'Joker مترجم', category: 'دراما', rating: 8.4, year: '2019', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1514539079130-25950c84af65?w=500&auto=format&fit=crop&q=60', isTrending: false, description: 'رحلة تحول كوميدي فاشل إلى مجرم سيكوباتي مروع في شوارع مدينة جوثام.' },
-  // ... (يمكننا التوسع حتى 100 فيلم بنفس الهيكلة الاحترافية)
-];
-
 export default function Home() {
+  const [movies, setMovies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('الكل');
   const [selectedYear, setSelectedYear] = useState('الكل');
   const [selectedCountry, setSelectedCountry] = useState('الكل');
   const [selectedRating, setSelectedRating] = useState('الكل');
 
-  const trendingMovie = initialMovies.find(m => m.isTrending) || initialMovies[0];
+  // جلب الأفلام من قاعدة بيانات Supabase عند فتح الصفحة
+  useEffect(() => {
+    async function fetchMovies() {
+      try {
+        const { data, error } = await supabase.from('movies').select('*');
+        if (error) {
+          console.error('خطأ في جلب الأفلام:', error);
+        } else if (data) {
+          setMovies(data);
+        }
+      } catch (err) {
+        console.error('حدث خطأ غير متوقع:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchMovies();
+  }, []);
 
-  const filteredMovies = initialMovies.filter(movie => {
-    const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase());
+  const trendingMovie = movies.length > 0 ? movies[0] : null;
+
+  const filteredMovies = movies.filter(movie => {
+    const matchesSearch = movie.title?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'الكل' || movie.category === selectedCategory;
     const matchesYear = selectedYear === 'الكل' || movie.year === selectedYear;
     const matchesCountry = selectedCountry === 'الكل' || movie.country === selectedCountry;
@@ -43,6 +56,7 @@ export default function Home() {
   return (
     <div dir="rtl" style={{ backgroundColor: '#141414', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', margin: 0, padding: 0 }}>
       
+      {/* شريط التنقل العلوي */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', background: 'linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.6))', position: 'fixed', top: 0, width: '100%', boxSizing: 'border-box', zIndex: 1000, flexWrap: 'wrap', gap: '15px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
           <h1 style={{ color: '#E50914', fontSize: '28px', fontWeight: '900', margin: 0, cursor: 'pointer', letterSpacing: '1px' }}>FLEXI</h1>
@@ -92,50 +106,60 @@ export default function Home() {
         </div>
       </nav>
 
-      <div style={{ position: 'relative', height: '65vh', backgroundImage: `url('${trendingMovie.image}')`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'center', padding: '0 40px', paddingTop: '60px' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #141414 10%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.8) 100%)' }}></div>
-        <div style={{ position: 'relative', zIndex: 10, maxWidth: '650px' }}>
-          <div style={{ display: 'inline-block', backgroundColor: '#E50914', color: '#fff', padding: '3px 10px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', marginBottom: '10px' }}>
-            🔥 الفيلم الرائج والأكثر مشاهدة حالياً
-          </div>
-          <h2 style={{ fontSize: '42px', fontWeight: 'bold', margin: '0 0 12px 0' }}>{trendingMovie.title}</h2>
-          <p style={{ fontSize: '15px', color: '#ddd', lineHeight: '1.6', margin: '0 0 20px 0' }}>
-            {trendingMovie.description}
-          </p>
-          <div style={{ display: 'flex', gap: '15px' }}>
-            <Link href={`/watch/${trendingMovie.id}`} style={{ backgroundColor: '#fff', color: '#000', padding: '10px 25px', borderRadius: '4px', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              ▶ مشاهدة الآن
-            </Link>
+      {/* قسم الفيلم الرائج في الأعلى */}
+      {trendingMovie && (
+        <div style={{ position: 'relative', height: '65vh', backgroundImage: `url('${trendingMovie.image}')`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'center', padding: '0 40px', paddingTop: '60px' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #141414 10%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.8) 100%)' }}></div>
+          <div style={{ position: 'relative', zIndex: 10, maxWidth: '650px' }}>
+            <div style={{ display: 'inline-block', backgroundColor: '#E50914', color: '#fff', padding: '3px 10px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', marginBottom: '10px' }}>
+              🔥 الفيلم الرائج حالياً
+            </div>
+            <h2 style={{ fontSize: '42px', fontWeight: 'bold', margin: '0 0 12px 0' }}>{trendingMovie.title}</h2>
+            <p style={{ fontSize: '15px', color: '#ddd', lineHeight: '1.6', margin: '0 0 20px 0' }}>
+              {trendingMovie.description}
+            </p>
+            <div style={{ display: 'flex', gap: '15px' }}>
+              <Link href={`/watch/${trendingMovie.id}`} style={{ backgroundColor: '#fff', color: '#000', padding: '10px 25px', borderRadius: '4px', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ▶ مشاهدة الآن
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <div style={{ padding: '40px' }}>
+      {/* قائمة الأفلام */}
+      <div style={{ padding: '40px', paddingTop: trendingMovie ? '40px' : '100px' }}>
         <h3 style={{ fontSize: '20px', fontWeight: 'bold', borderRight: '4px solid #E50914', paddingRight: '12px', marginBottom: '25px' }}>
-          نتائج الأفلام المعروضة ({filteredMovies.length})
+          مكتبة الأفلام ({filteredMovies.length})
         </h3>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '25px' }}>
-          {filteredMovies.map((movie) => (
-            <Link 
-              href={`/watch/${movie.id}`} 
-              key={movie.id} 
-              style={movieCardStyle}
-              className="movie-card"
-            >
-              <div style={{ height: '280px', backgroundColor: '#222', overflow: 'hidden' }}>
-                <img src={movie.image} alt={movie.title} className="movie-img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-              <div style={{ padding: '12px' }}>
-                <h4 style={{ fontSize: '14px', margin: '0 0 8px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{movie.title}</h4>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#aaa' }}>
-                  <span>{movie.year} | {movie.country}</span>
-                  <span style={{ color: '#f5c518', fontWeight: 'bold' }}>★ {movie.rating}</span>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>جاري تحميل الأفلام من قاعدة البيانات...</div>
+        ) : filteredMovies.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>لا توجد أفلام مطابقة للبحث أو أن قاعدة البيانات فارغة حالياً. أضف أفلاماً من لوحة تحكم Supabase!</div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '25px' }}>
+            {filteredMovies.map((movie) => (
+              <Link 
+                href={`/watch/${movie.id}`} 
+                key={movie.id} 
+                style={movieCardStyle}
+                className="movie-card"
+              >
+                <div style={{ height: '280px', backgroundColor: '#222', overflow: 'hidden' }}>
+                  <img src={movie.image} alt={movie.title} className="movie-img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+                <div style={{ padding: '12px' }}>
+                  <h4 style={{ fontSize: '14px', margin: '0 0 8px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{movie.title}</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#aaa' }}>
+                    <span>{movie.year} | {movie.country}</span>
+                    <span style={{ color: '#f5c518', fontWeight: 'bold' }}>★ {movie.rating}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       <style jsx>{`
