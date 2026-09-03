@@ -108,7 +108,7 @@ export default function Home() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #141414 10%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.8) 100%)' }}></div>
         <div style={{ position: 'relative', zIndex: 10, maxWidth: '650px' }}>
           <div style={{ display: 'inline-block', backgroundColor: '#E50914', color: '#fff', padding: '3px 10px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', marginBottom: '10px' }}>
-            🔥 الفيلم الرائج والأكثر مشاهدة حالياً
+             الفيلم الرائج والأكثر مشاهدة حالياً
           </div>
           <h2 style={{ fontSize: '42px', fontWeight: 'bold', margin: '0 0 12px 0' }}>{trendingMovie.title}</h2>
           <p style={{ fontSize: '15px', color: '#ddd', lineHeight: '1.6', margin: '0 0 20px 0' }}>
