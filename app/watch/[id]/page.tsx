@@ -3,13 +3,22 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
+// هذه الدالة إجبارية مع output: export لتحديد الأيدي (IDs) التي سيتم بناؤها مسبقاً
+export async function generateStaticParams() {
+  return [
+    { id: '1' },
+    { id: '2' },
+    { id: '3' },
+    { id: '4' }
+  ];
+}
+
 interface WatchPageProps {
   params: {
     id: string;
   };
 }
 
-// بيانات تجريبية للأفلام لعرض تفاصيلها في صفحة المشاهدة
 const moviesData: Record<string, { title: string; description: string; year: string; country: string; rating: number; category: string }> = {
   '1': { title: 'Inception مترجم', description: 'لص يسرق أسرار الشركات من خلال اختراق الأحلام يُعرض عليه مهمة مستحيلة لزرع فكرة في رأس الرئيس التنفيذي.', year: '2010', country: 'أمريكا', rating: 8.8, category: 'أكشن' },
   '2': { title: 'Interstellar مترجم', description: 'فريق من استكشاف الفضاء يسافر عبر ثقب دودي محاولاً إنقاذ البشرية وبحث عن كوكب صالح للعيش.', year: '2014', country: 'أمريكا', rating: 8.6, category: 'خيال علمي' },
@@ -28,11 +37,9 @@ export default function WatchPage({ params }: WatchPageProps) {
     category: 'أكشن' 
   };
 
-  // حالات التحكم بالسيرفرات وجودة الفيديو
   const [activeServer, setActiveServer] = useState<'server1' | 'server2'>('server1');
   const [selectedQuality, setSelectedQuality] = useState('1080p');
 
-  // روابط تجريبية للسيرفرات (يمكن ربطها لاحقاً بـ Supabase)
   const serverLinks = {
     server1: 'https://www.w3schools.com/html/mov_bbb.mp4',
     server2: 'https://www.w3schools.com/html/movie.mp4'
@@ -41,7 +48,6 @@ export default function WatchPage({ params }: WatchPageProps) {
   return (
     <div dir="rtl" style={{ backgroundColor: '#141414', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', margin: 0, paddingBottom: '50px' }}>
       
-      {/* شريط علوي بسيط للعودة */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', backgroundColor: '#000', borderBottom: '1px solid #222' }}>
         <Link href="/" style={{ color: '#E50914', fontSize: '24px', fontWeight: '900', textDecoration: 'none' }}>FLEXI</Link>
         <Link href="/" style={{ color: '#aaa', fontSize: '14px', textDecoration: 'none' }}>← العودة للرئيسية</Link>
@@ -49,10 +55,8 @@ export default function WatchPage({ params }: WatchPageProps) {
 
       <div style={{ maxWidth: '1000px', margin: '30px auto', padding: '0 20px' }}>
         
-        {/* عنوان الفيلم */}
         <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '15px' }}>{movie.title}</h1>
 
-        {/* مشغل الفيديو السينمائي */}
         <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', backgroundColor: '#000', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.8)' }}>
           <video 
             key={activeServer}
@@ -65,10 +69,8 @@ export default function WatchPage({ params }: WatchPageProps) {
           </video>
         </div>
 
-        {/* لوحة التحكم والتحويل بين السيرفرات والجودات */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', flexWrap: 'wrap', gap: '15px', backgroundColor: '#1f1f1f', padding: '15px 20px', borderRadius: '8px' }}>
           
-          {/* اختيار السيرفرات */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{ fontSize: '13px', color: '#aaa' }}>سيرفرات المشاهدة:</span>
             <button 
@@ -85,7 +87,6 @@ export default function WatchPage({ params }: WatchPageProps) {
             </button>
           </div>
 
-          {/* اختيار الجودة وزر التحميل المستقل */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '13px', color: '#aaa' }}>الجودة:</span>
@@ -101,7 +102,6 @@ export default function WatchPage({ params }: WatchPageProps) {
               </select>
             </div>
 
-            {/* زر التحميل المستقل */}
             <a 
               href={serverLinks[activeServer]} 
               download 
@@ -115,7 +115,6 @@ export default function WatchPage({ params }: WatchPageProps) {
 
         </div>
 
-        {/* تفاصيل ومعلومات الفيلم */}
         <div style={{ marginTop: '25px', backgroundColor: '#1a1a1a', padding: '25px', borderRadius: '8px', border: '1px solid #333' }}>
           <div style={{ display: 'flex', gap: '15px', fontSize: '13px', color: '#aaa', marginBottom: '12px' }}>
             <span style={{ backgroundColor: '#333', padding: '3px 8px', borderRadius: '4px', color: '#fff' }}>{movie.category}</span>
