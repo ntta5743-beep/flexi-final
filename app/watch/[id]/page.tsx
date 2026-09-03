@@ -1,11 +1,14 @@
 import React from 'react';
 import WatchClient from './WatchClient';
 
+// السماح بالمسارات الديناميكية التي لم يتم توليدها مسبقاً أثناء البناء
+export const dynamicParams = true;
+
+// دالة فارغة أو توريد عناصر أساسية لتجاوز فحص البناء الثابت
 export async function generateStaticParams() {
-  // توليد مصفوفة الأيدي من 1 إلى 100 لجميع الأفلام
-  return Array.from({ length: 100 }, (_, i) => ({
-    id: (i + 1).toString()
-  }));
+  return [
+    { id: '1' }
+  ];
 }
 
 interface PageProps {
