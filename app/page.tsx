@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 
 const initialMovies = [
-  { id: 1, title: 'Inception (مترجم)', category: 'أكشن', rating: '8.8', year: '2010', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&auto=format&fit=crop&q=60' },
-  { id: 2, title: 'Interstellar (مترجم)', category: 'خيال علمي', rating: '8.6', year: '2014', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&auto=format&fit=crop&q=60' },
-  { id: 3, title: 'The Conjuring (مترجم)', category: 'رعب', rating: '7.5', year: '2013', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60' },
-  { id: 4, title: 'The Hangover (مترجم)', category: 'كوميدي', rating: '7.7', year: '2009', country: 'أمريكا', image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&auto=format&fit=crop&q=60' },
+  { id: 1, title: 'Inception (مترجم)', category: 'أكشن', rating: '8.8', year: '2010', image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&auto=format&fit=crop&q=60' },
+  { id: 2, title: 'Interstellar (مترجم)', category: 'خيال علمي', rating: '8.6', year: '2014', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&auto=format&fit=crop&q=60' },
+  { id: 3, title: 'The Conjuring (مترجم)', category: 'رعب', rating: '7.5', year: '2013', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60' },
+  { id: 4, title: 'The Hangover (مترجم)', category: 'كوميدي', rating: '7.7', year: '2009', image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&auto=format&fit=crop&q=60' },
 ];
 
 export default function Home() {
@@ -21,32 +21,31 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-[#141414] text-white font-sans" dir="rtl">
-      {/* 1. شريط التنقل العلوي (Navbar) منظم بالكامل */}
-      <nav className="flex flex-wrap items-center justify-between px-6 md:px-12 py-4 bg-gradient-to-b from-black/90 to-transparent fixed top-0 w-full z-50 gap-4">
-        <div className="flex items-center gap-8">
-          <h1 className="text-red-600 text-3xl font-black tracking-wider cursor-pointer">FLEXI</h1>
-          <div className="hidden md:flex items-center gap-6 text-sm text-gray-300">
-            <span className="cursor-pointer hover:text-white font-semibold">الرئيسية</span>
-            <span className="cursor-pointer hover:text-gray-400">الأفلام</span>
-            <span className="cursor-pointer hover:text-gray-400">الأكثر مشاهدة</span>
-            <span className="cursor-pointer hover:text-gray-400">الأعلى تقييماً</span>
+    <div dir="rtl" style={{ backgroundColor: '#141414', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', margin: 0, padding: 0 }}>
+      {/* شريط التنقل العلوي */}
+      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 40px', background: 'linear-gradient(to bottom, rgba(0,0,0,0.9), transparent)', position: 'fixed', top: 0, width: '100%', boxSizing: 'border-box', zIndex: 1000 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
+          <h1 style={{ color: '#E50914', fontSize: '28px', fontWeight: '900', margin: 0, cursor: 'pointer' }}>FLEXI</h1>
+          <div style={{ display: 'flex', gap: '20px', fontSize: '14px', color: '#e5e5e5' }}>
+            <span style={{ cursor: 'pointer', fontWeight: 'bold' }}>الرئيسية</span>
+            <span style={{ cursor: 'pointer' }}>الأفلام</span>
+            <span style={{ cursor: 'pointer' }}>الأكثر مشاهدة</span>
+            <span style={{ cursor: 'pointer' }}>الأعلى تقييماً</span>
           </div>
         </div>
 
-        {/* شريط البحث وزر الفلتر */}
-        <div className="flex items-center gap-3">
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
           <input
             type="text"
             placeholder="بحث عن فيلم..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-black/60 border border-gray-600 px-4 py-1.5 rounded text-sm text-white focus:outline-none focus:border-white w-40 md:w-60 transition"
+            style={{ backgroundColor: 'rgba(0,0,0,0.6)', border: '1px solid #777', padding: '8px 12px', borderRadius: '4px', color: '#fff', fontSize: '14px', width: '200px', outline: 'none' }}
           />
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-zinc-800 border border-gray-600 px-3 py-1.5 rounded text-sm text-white focus:outline-none"
+            style={{ backgroundColor: '#222', border: '1px solid #777', padding: '8px 12px', borderRadius: '4px', color: '#fff', fontSize: '14px', outline: 'none' }}
           >
             <option value="الكل">كل التصنيفات</option>
             <option value="أكشن">أكشن</option>
@@ -57,40 +56,42 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* 2. الواجهة البانرية (Hero Section) */}
-      <div className="relative h-[70vh] w-full flex items-center px-6 md:px-12 bg-[url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200&auto=format&fit=crop&q=80')] bg-cover bg-center pt-16">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-black/40 to-black/60"></div>
-        <div className="relative z-10 max-w-xl space-y-4">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-wide">Inception (مترجم)</h2>
-          <p className="text-gray-300 text-sm md:text-base line-clamp-3">
+      {/* الواجهة البانرية */}
+      <div style={{ position: 'relative', height: '65vh', backgroundImage: `url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200&auto=format&fit=crop&q=80')`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'center', padding: '0 40px', paddingTop: '80px' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #141414, rgba(0,0,0,0.4))' }}></div>
+        <div style={{ position: 'relative', zIndex: 10, maxWidth: '600px' }}>
+          <h2 style={{ fontSize: '42px', fontWeight: 'bold', margin: '0 0 15px 0' }}>Inception (مترجم)</h2>
+          <p style={{ fontSize: '15px', color: '#ccc', lineHeight: '1.6', margin: '0 0 20px 0' }}>
             لص يسرق أسرار الشركات من خلال اختراق الأحلام يُعرض عليه مهمة مستحيلة لزرع فكرة في رأس الرئيس التنفيذي لشركة منافسة.
           </p>
-          <div className="flex gap-4 pt-2">
-            <Link href="/watch/1" className="bg-white text-black px-6 py-2.5 rounded font-bold flex items-center gap-2 hover:bg-opacity-80 transition">
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <Link href="/watch/1" style={{ backgroundColor: '#fff', color: '#000', padding: '10px 25px', borderRadius: '4px', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block' }}>
               ▶ مشاهدة الآن
             </Link>
-            <button className="bg-gray-500/70 text-white px-6 py-2.5 rounded font-bold hover:bg-gray-500/50 transition">
+            <button style={{ backgroundColor: 'rgba(109, 109, 110, 0.7)', color: '#fff', padding: '10px 25px', borderRadius: '4px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>
               ℹ تفاصيل أكثر
             </button>
           </div>
         </div>
       </div>
 
-      {/* 3. قسم شبكة الأفلام (Movie Grid) */}
-      <div className="px-6 md:px-12 py-10 space-y-6">
-        <h3 className="text-2xl font-bold border-r-4 border-red-600 pr-3">الأفلام الحديثة والأكثر مشاهدة</h3>
+      {/* قسم شبكة الأفلام */}
+      <div style={{ padding: '40px' }}>
+        <h3 style={{ fontSize: '22px', fontWeight: 'bold', borderRight: '4px solid #E50914', paddingRight: '12px', marginBottom: '25px' }}>
+          الأفلام الحديثة والأكثر مشاهدة
+        </h3>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px' }}>
           {filteredMovies.map((movie) => (
-            <Link href={`/watch/${movie.id}`} key={movie.id} className="group relative bg-zinc-900 rounded-lg overflow-hidden shadow-lg transition transform hover:scale-105 duration-300">
-              <div className="aspect-[2/3] w-full overflow-hidden bg-zinc-800">
-                <img src={movie.image} alt={movie.title} className="w-full h-full object-cover group-hover:opacity-90 transition" />
+            <Link href={`/watch/${movie.id}`} key={movie.id} style={{ textDecoration: 'none', color: '#fff', backgroundColor: '#1f1f1f', borderRadius: '6px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', transition: 'transform 0.3s' }}>
+              <div style={{ height: '280px', backgroundColor: '#333', overflow: 'hidden' }}>
+                <img src={movie.image} alt={movie.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
-              <div className="p-3 space-y-1">
-                <h4 className="font-semibold text-sm truncate">{movie.title}</h4>
-                <div className="flex justify-between text-xs text-gray-400">
+              <div style={{ padding: '12px' }}>
+                <h4 style={{ fontSize: '14px', margin: '0 0 8px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{movie.title}</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#aaa' }}>
                   <span>{movie.year}</span>
-                  <span className="text-yellow-400 font-bold">★ {movie.rating}</span>
+                  <span style={{ color: '#f5c518', fontWeight: 'bold' }}>★ {movie.rating}</span>
                 </div>
               </div>
             </Link>
