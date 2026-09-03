@@ -11,6 +11,7 @@ const countriesList = ['الكل', 'أمريكا', 'بريطانيا', 'كوري
 export default function Home() {
   const [movies, setMovies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('الكل');
@@ -18,18 +19,22 @@ export default function Home() {
   const [selectedCountry, setSelectedCountry] = useState('الكل');
   const [selectedRating, setSelectedRating] = useState('الكل');
 
-  // جلب الأفلام من قاعدة بيانات Supabase عند فتح الصفحة
   useEffect(() => {
     async function fetchMovies() {
       try {
+        setLoading(true);
         const { data, error } = await supabase.from('movies').select('*');
+        
         if (error) {
-          console.error('خطأ في جلب الأفلام:', error);
+          console.error('خطأ Supabase:', error.message);
+          setErrorMsg(error.message);
         } else if (data) {
+          console.log('الأفلام المسترجعة:', data);
           setMovies(data);
         }
-      } catch (err) {
-        console.error('حدث خطأ غير متوقع:', err);
+      } catch (err: any) {
+        console.error('خطأ غير متوقع:', err);
+        setErrorMsg(err.message || 'حدث خطأ غير متوقع');
       } finally {
         setLoading(false);
       }
@@ -56,87 +61,25 @@ export default function Home() {
   return (
     <div dir="rtl" style={{ backgroundColor: '#141414', color: '#ffffff', minHeight: '100vh', fontFamily: 'sans-serif', margin: 0, padding: 0 }}>
       
-      {/* شريط التنقل العلوي */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', background: 'linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.6))', position: 'fixed', top: 0, width: '100%', boxSizing: 'border-box', zIndex: 1000, flexWrap: 'wrap', gap: '15px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
           <h1 style={{ color: '#E50914', fontSize: '28px', fontWeight: '900', margin: 0, cursor: 'pointer', letterSpacing: '1px' }}>FLEXI</h1>
-          <div style={{ display: 'flex', gap: '15px', fontSize: '13px', color: '#e5e5e5' }}>
-            <span style={{ cursor: 'pointer', fontWeight: 'bold' }}>الرئيسية</span>
-            <span style={{ cursor: 'pointer' }}>الأفلام</span>
-            <span style={{ cursor: 'pointer' }}>الأكثر مشاهدة</span>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <input
-            type="text"
-            placeholder="ابحث عن فيلم..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ backgroundColor: 'rgba(0,0,0,0.7)', border: '1px solid #555', padding: '7px 12px', borderRadius: '4px', color: '#fff', fontSize: '13px', width: '160px', outline: 'none' }}
-          />
-
-          <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} style={selectStyle}>
-            <option value="الكل">كل الأنواع</option>
-            {categoriesList.filter(c => c !== 'الكل').map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-
-          <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} style={selectStyle}>
-            <option value="الكل">كل السنوات</option>
-            {yearsList.map(year => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
-
-          <select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)} style={selectStyle}>
-            <option value="الكل">كل البلدان</option>
-            {countriesList.filter(c => c !== 'الكل').map(country => (
-              <option key={country} value={country}>{country}</option>
-            ))}
-          </select>
-
-          <select value={selectedRating} onChange={(e) => setSelectedRating(e.target.value)} style={selectStyle}>
-            <option value="الكل">كل التقييمات</option>
-            <option value="9+">★ 9+ ممتاز</option>
-            <option value="8+">★ 8+ عالي جداً</option>
-            <option value="7+">★ 7+ جيد جداً</option>
-          </select>
         </div>
       </nav>
 
-      {/* قسم الفيلم الرائج في الأعلى */}
-      {trendingMovie && (
-        <div style={{ position: 'relative', height: '65vh', backgroundImage: `url('${trendingMovie.image}')`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'center', padding: '0 40px', paddingTop: '60px' }}>
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #141414 10%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.8) 100%)' }}></div>
-          <div style={{ position: 'relative', zIndex: 10, maxWidth: '650px' }}>
-            <div style={{ display: 'inline-block', backgroundColor: '#E50914', color: '#fff', padding: '3px 10px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', marginBottom: '10px' }}>
-              🔥 الفيلم الرائج حالياً
-            </div>
-            <h2 style={{ fontSize: '42px', fontWeight: 'bold', margin: '0 0 12px 0' }}>{trendingMovie.title}</h2>
-            <p style={{ fontSize: '15px', color: '#ddd', lineHeight: '1.6', margin: '0 0 20px 0' }}>
-              {trendingMovie.description}
-            </p>
-            <div style={{ display: 'flex', gap: '15px' }}>
-              <Link href={`/watch/${trendingMovie.id}`} style={{ backgroundColor: '#fff', color: '#000', padding: '10px 25px', borderRadius: '4px', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                ▶ مشاهدة الآن
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* قائمة الأفلام */}
-      <div style={{ padding: '40px', paddingTop: trendingMovie ? '40px' : '100px' }}>
+      <div style={{ padding: '120px 40px 40px 40px' }}>
         <h3 style={{ fontSize: '20px', fontWeight: 'bold', borderRight: '4px solid #E50914', paddingRight: '12px', marginBottom: '25px' }}>
           مكتبة الأفلام ({filteredMovies.length})
         </h3>
         
         {loading ? (
           <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>جاري تحميل الأفلام من قاعدة البيانات...</div>
+        ) : errorMsg ? (
+          <div style={{ textAlign: 'center', padding: '50px', color: '#ff4d4d' }}>حدث خطأ في الاتصال بقاعدة البيانات: {errorMsg}</div>
         ) : filteredMovies.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>لا توجد أفلام مطابقة للبحث أو أن قاعدة البيانات فارغة حالياً. أضف أفلاماً من لوحة تحكم Supabase!</div>
+          <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>
+            قاعدة البيانات فارغة أو لا توجد أفلام مطابقة. تأكد من إدخال صف واحد على الأقل في جدول movies عبر Supabase.
+          </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '25px' }}>
             {filteredMovies.map((movie) => (
@@ -171,27 +114,10 @@ export default function Home() {
           box-shadow: 0 15px 30px rgba(229, 9, 20, 0.35);
           z-index: 10;
         }
-        .movie-img {
-          transition: transform 0.4s ease !important;
-        }
-        .movie-card:hover .movie-img {
-          transform: scale(1.08);
-        }
       `}</style>
     </div>
   );
 }
-
-const selectStyle = {
-  backgroundColor: '#1a1a1a',
-  border: '1px solid #444',
-  padding: '7px 10px',
-  borderRadius: '4px',
-  color: '#fff',
-  fontSize: '12px',
-  outline: 'none',
-  cursor: 'pointer'
-};
 
 const movieCardStyle = {
   textDecoration: 'none',
