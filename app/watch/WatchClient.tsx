@@ -83,9 +83,11 @@ export default function WatchClient() {
             key={currentVideoUrl}
             controls 
             autoPlay 
+            playsInline
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            src={currentVideoUrl}
+            onError={(e) => console.error("خطأ في تشغيل الفيديو:", e)}
           >
+            <source src={currentVideoUrl} type="video/mp4" />
             متصفحك لا يدعم عرض الفيديو.
           </video>
         </div>
