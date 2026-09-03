@@ -122,7 +122,7 @@ export default function Home() {
               {trendingMovie.description}
             </p>
             <div style={{ display: 'flex', gap: '15px' }}>
-              <Link href={`/watch/${trendingMovie.id}`} style={{ backgroundColor: '#fff', color: '#000', padding: '12px 30px', borderRadius: '4px', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', transition: 'background 0.2s' }}>
+              <Link href={`/watch?id=${trendingMovie.id}`} style={{ backgroundColor: '#fff', color: '#000', padding: '12px 30px', borderRadius: '4px', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', transition: 'background 0.2s' }}>
                 ▶ مشاهدة الآن
               </Link>
             </div>
@@ -146,7 +146,7 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '25px' }}>
             {filteredMovies.map((movie) => (
               <Link 
-                href={`/watch/${movie.id}`} 
+                href={`/watch?id=${movie.id}`} 
                 key={movie.id} 
                 style={movieCardStyle}
                 className="movie-card"
